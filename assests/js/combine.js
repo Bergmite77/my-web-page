@@ -41,6 +41,9 @@ document.getElementById('combineButton').addEventListener('click', () => {
                     downloadLink.href = canvas.toDataURL();
                     downloadLink.download = 'combined-image.png';
                     downloadLink.textContent = 'Download Combined Image';
+
+                    // Enable slicing
+                    enableSlicing(canvas, imgB, imgA, transparency);
                 };
                 imgB.src = eventB.target.result;
             };
@@ -51,52 +54,58 @@ document.getElementById('combineButton').addEventListener('click', () => {
     readerA.readAsDataURL(imageAInput.files[0]);
 });
 
-let startX, startY, isDrawing = false;
+function enableSlicing(canvas, imgB, imgA, transparency) {
+    let startX, startY, isDrawing = false;
 
-canvas.addEventListener('mousedown', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    startX = e.clientX - rect.left;
-    startY = e.clientY - rect.top;
-    isDrawing = true;
-});
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+        isDrawing = true;
+    });
 
-canvas.addEventListener('mousemove', (e) => {
-    if (!isDrawing) return;
-    const rect = canvas.getBoundingClientRect();
-    const ctx = canvas.getContext('2d');
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const ctx = canvas.getContext('2d');
+        const currentX = e.clientX - rect.left;
+        const currentY = e.clientY - rect.top;
 
-    // Redraw the canvas with the selected slice rectangle
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(imgB, 0, 0); // Redraw Image B
-    ctx.drawImage(imgA, 0, 0, imgB.width, imgB.height); // Redraw Image A with transparency
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
-});
+        // Redraw the canvas with the selected slice rectangle
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(imgB, 0, 0); // Redraw Image B
+        ctx.globalAlpha = transparency;
+        ctx.drawImage(imgA, 0, 0, imgB.width, imgB.height); // Redraw Image A with transparency
+        ctx.globalAlpha = 1.0; // Reset transparency
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+    });
 
-canvas.addEventListener('mouseup', (e) => {
-    isDrawing = false;
-    const rect = canvas.getBoundingClientRect();
-    const endX = e.clientX - rect.left;
-    const endY = e.clientY - rect.top;
+    canvas.addEventListener('mouseup', (e) => {
+        isDrawing = false;
+        const rect = canvas.getBoundingClientRect();
+        const endX = e.clientX - rect.left;
+        const endY = e.clientY - rect.top;
 
-    const sliceWidth = endX - startX;
-    const sliceHeight = endY - startY;
+        const sliceWidth = endX - startX;
+        const sliceHeight = endY - startY;
 
-    // Slice the canvas
-    const ctx = canvas.getContext('2d');
-    const slicedImage = ctx.getImageData(startX, startY, sliceWidth, sliceHeight);
+        // Slice the canvas
+        const ctx = canvas.getContext('2d');
+        const slicedImage = ctx.getImageData(startX, startY, sliceWidth, sliceHeight);
 
-    // Create a new canvas for the sliced image
-    const sliceCanvas = document.createElement('canvas');
-    sliceCanvas.width = sliceWidth;
-    sliceCanvas.height = sliceHeight;
-    const sliceCtx = sliceCanvas.getContext('2d');
-    sliceCtx.putImageData(slicedImage, 0, 0);
+        // Create a new canvas for the sliced image
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = sliceWidth;
+        sliceCanvas.height = sliceHeight;
+        const sliceCtx = sliceCanvas.getContext('2d');
+        sliceCtx.putImageData(slicedImage, 0, 0);
 
-    // Update download link for the sliced image
-    downloadLink.href = sliceCanvas.toDataURL();
-    downloadLink.download = 'sliced-image.png';
-    downloadLink.textContent = 'Download Sliced Image';
-});
+        // Update download link for the sliced image
+        const downloadLink = document.getElementById('downloadLink');
+        downloadLink.href = sliceCanvas.toDataURL();
+        downloadLink.download = 'sliced-image.png';
+        downloadLink.textContent = 'Download Sliced Image';
+    });
+}

@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combine Images</title>
+    <title>Combine and Slice Images</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Combine Images</h1>
-        <p>Upload two images, adjust transparency, and slice the second image.</p>
+        <h1>Combine and Slice Images</h1>
+        <p>Upload two images, adjust transparency for the overlay, and slice the background image.</p>
     </header>
 
     <main>
         <section>
             <label for="imageA">Upload Image A (Overlay):</label>
             <input type="file" id="imageA" accept="image/*">
-            
+
             <label for="imageB">Upload Image B (Background):</label>
             <input type="file" id="imageB" accept="image/*">
-            
+
             <label for="transparency">Transparency (Image A):</label>
             <input type="range" id="transparency" min="0" max="100" value="50">
         </section>
@@ -30,7 +30,7 @@
 
         <section>
             <canvas id="canvas"></canvas>
-            <a id="downloadLink" style="display: none;">Download Combined Image</a>
+            <a id="downloadLink" style="display: none;">Download Image</a>
         </section>
     </main>
 
@@ -38,6 +38,6 @@
         <p>&copy; 2025 Combine Images. All rights reserved.</p>
     </footer>
 
-    <script src="./assests/js/combine.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
