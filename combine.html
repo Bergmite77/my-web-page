@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combine and Slice Images</title>
+    <title>Slice and Combine Images</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Combine and Slice Images</h1>
-        <p>Upload two images, adjust transparency for the overlay, and slice the background image.</p>
+        <h1>Slice and Combine Images</h1>
+        <p>Slice a portion of the background image, overlay another image, and download the combined result.</p>
     </header>
 
     <main>
@@ -25,19 +25,27 @@
         </section>
 
         <section>
-            <button id="combineButton">Combine Images</button>
+            <button id="sliceBackgroundButton">Slice Background Image</button>
+            <button id="combineButton" disabled>Combine Sliced Background with Image A</button>
+            <p id="statusMessage" style="font-weight: bold;"></p> <!-- Status message -->
         </section>
 
         <section>
-            <canvas id="canvas"></canvas>
-            <a id="downloadLink" style="display: none;">Download Image</a>
+            <canvas id="canvas" style="border: 1px solid black;"></canvas>
+            <a id="downloadLink" style="display: none;">Download Combined Image</a>
         </section>
+
+        <section>
+    <button id="sliceBackgroundButton">Slice Background Image</button>
+    <button id="combineButton" disabled>Combine Sliced Background with Image A</button>
+    <p id="statusMessage" style="font-weight: bold;"></p> <!-- Status message -->
+</section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Combine Images. All rights reserved.</p>
+        <p>&copy; 2025 Slice and Combine Images. All rights reserved.</p>
     </footer>
 
-    <script src="/assests/js/combine.js"></script>
+    <script src="assets/js/combine.js"></script>
 </body>
 </html>
